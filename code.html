@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GCF B.44 | The Living Archive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @font-face {
+            font-family: 'Satoshi';
+            src: url('https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap');
+        }
+        body {
+            font-family: 'Satoshi', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        .ripple-bg {
+            background: radial-gradient(circle at 50% 50%, #CBFD3C 0%, transparent 10%),
+                        radial-gradient(circle at 20% 80%, #006B29 0%, transparent 15%);
+            background-size: 40px 40px;
+            opacity: 0.05;
+        }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            background: rgba(234, 255, 233, 0.8);
+        }
+        .zoomable {
+            cursor: zoom-in;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .zoomable:hover {
+            transform: scale(1.04);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0,0,0,0.92);
+            align-items: center;
+            justify-content: center;
+        }
+        #lightbox.active {
+            display: flex;
+        }
+        #lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+        }
+        #lightbox-close {
+            position: absolute;
+            top: 24px;
+            right: 32px;
+            color: #fff;
+            font-size: 2.5rem;
+            font-weight: 300;
+            cursor: pointer;
+            line-height: 1;
+            font-family: 'Space Grotesk', sans-serif;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        #lightbox-close:hover { opacity: 1; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "outline": "#6e7a6c",
+                "on-tertiary-container": "#fafdff",
+                "on-tertiary": "#ffffff",
+                "error-container": "#ffdad6",
+                "inverse-primary": "#6edd7f",
+                "tertiary-container": "#007f9e",
+                "secondary-container": "#c2f432",
+                "on-secondary": "#ffffff",
+                "inverse-surface": "#0e381c",
+                "background": "#eaffe9",
+                "surface-container-highest": "#c0eec5",
+                "secondary": "#4f6700",
+                "primary-fixed-dim": "#6edd7f",
+                "surface-container-low": "#d1ffd6",
+                "surface": "#eaffe9",
+                "surface-tint": "#006e2a",
+                "on-tertiary-fixed": "#001f29",
+                "on-tertiary-fixed-variant": "#004d62",
+                "primary-container": "#008736",
+                "primary-fixed": "#8afa99",
+                "on-secondary-fixed-variant": "#3a4d00",
+                "on-error-container": "#93000a",
+                "on-error": "#ffffff",
+                "on-surface-variant": "#3e4a3d",
+                "outline-variant": "#bdcaba",
+                "on-surface": "#00210c",
+                "surface-container": "#cbf9d0",
+                "secondary-fixed": "#c2f432",
+                "primary": "#006b29",
+                "on-secondary-container": "#546d00",
+                "tertiary-fixed": "#b9eaff",
+                "surface-container-lowest": "#ffffff",
+                "on-background": "#00210c",
+                "surface-variant": "#c0eec5",
+                "on-secondary-fixed": "#151f00",
+                "error": "#ba1a1a",
+                "on-primary-fixed": "#002108",
+                "on-primary-fixed-variant": "#00531e",
+                "on-primary": "#ffffff",
+                "on-primary-container": "#f7fff2",
+                "inverse-on-surface": "#cefcd3",
+                "tertiary": "#00647e",
+                "secondary-fixed-dim": "#a7d701",
+                "tertiary-fixed-dim": "#58d5ff",
+                "surface-dim": "#b8e5bd",
+                "surface-bright": "#eaffe9",
+                "surface-container-high": "#c6f4cb"
+              },
+              fontFamily: {
+                "headline": ["Space Grotesk"],
+                "body": ["Satoshi"],
+                "label": ["Space Grotesk"]
+              },
+              borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#EAFFE9] dark:bg-[#00210C]/90 backdrop-blur-md">
+<nav class="flex justify-between items-center w-full px-8 py-4 max-w-[1440px] mx-auto">
+<div class="font-['Space_Grotesk'] font-bold text-xl text-[#006B29] dark:text-[#CBFD3C]">GCF Archive</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-['Space_Grotesk'] font-medium uppercase tracking-wider text-sm text-[#006B29] dark:text-[#CBFD3C] border-b-2 border-[#006B29] dark:border-[#CBFD3C] pb-1 transition-colors duration-300" href="#booth1">Exhibitions</a>
+<a class="font-['Space_Grotesk'] font-medium uppercase tracking-wider text-sm text-[#00210C]/60 dark:text-[#EAFFE9]/60 hover:text-[#006B29] dark:hover:text-[#CBFD3C] transition-colors duration-300" href="#">Documents</a>
+<a class="font-['Space_Grotesk'] font-medium uppercase tracking-wider text-sm text-[#00210C]/60 dark:text-[#EAFFE9]/60 hover:text-[#006B29] dark:hover:text-[#CBFD3C] transition-colors duration-300" href="#">Schedule</a>
+<a class="font-['Space_Grotesk'] font-medium uppercase tracking-wider text-sm text-[#00210C]/60 dark:text-[#EAFFE9]/60 hover:text-[#006B29] dark:hover:text-[#CBFD3C] transition-colors duration-300" href="#">Attendees</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#006B29]" data-icon="account_circle">account_circle</span>
+</div>
+</nav>
+</header>
+<div id="lightbox" onclick="closeLightbox(event)">
+  <span id="lightbox-close" onclick="closeLightbox()">&#x2715;</span>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+<main class="flex-grow pt-24">
+<!-- Hero Section -->
+<section class="px-8 md:px-12 py-20 relative overflow-hidden bg-surface-container-low">
+<div class="absolute inset-0 ripple-bg"></div>
+<div class="max-w-[1440px] mx-auto relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<div class="lg:col-span-8">
+<span class="font-headline font-bold text-primary uppercase tracking-widest text-sm mb-4 block">Event Archive / B.44</span>
+<h1 class="font-headline text-5xl md:text-7xl font-bold text-on-surface leading-[1.1] mb-8">
+                            Technology for <span class="text-primary">Efficient and Impactful GCF</span>
+</h1>
+<p class="font-body text-xl text-on-surface-variant max-w-2xl leading-relaxed">
+                            The B44 Technology &amp; AI Exhibition is a curated showcase for the GCF Board that demonstrates how digital platforms, data, and AI are already being used and can be further leveraged to improve how the Fund operates and delivers impact.
+                        </p>
+</div>
+<div class="lg:col-span-4 flex items-end">
+<div class="bg-primary p-8 w-full">
+<h3 class="font-headline text-white font-bold text-2xl mb-2">B.44 Exhibition</h3>
+<p class="font-body text-surface-container-low text-sm">Interactive showcase of GCF's digital evolution and AI governance frameworks.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Booth 1: AI Governance -->
+<section class="px-8 md:px-12 py-24 bg-surface" id="booth1">
+<div class="max-w-[1440px] mx-auto">
+
+  <!-- Intro text: full width -->
+  <div class="mb-16">
+    <h2 class="font-headline text-4xl font-bold mb-8 text-on-surface">A.i Governance &amp; Regional Enablement</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div class="prose prose-lg text-on-surface-variant font-body leading-loose">
+        <h4 class="text-primary font-bold mb-4">A.i in Service of Climate Finance:</h4>
+        <p class="mb-6">Artificial intelligence is reshaping how international institutions deliver on their mandates. At the Green Climate Fund (GCF), A.i is being introduced deliberately and responsibly to support the Fund's core mission: accelerating climate finance for developing countries with integrity, accountability, and transparency.</p>
+        <p class="mb-6">GCF's fundamental premise is straightforward: A.i augments what GCF's people do. It does not replace their judgment. Every A.i application at GCF operates with human-in-the-loop oversight, and no A.i system operates autonomously on matters that affect funding decisions, policy, or partner engagement. A.i tools are designed to serve all of GCF's partners equitably, with particular attention to the needs of least developed countries, small island developing states, and African states.</p>
+      </div>
+      <div class="prose prose-lg text-on-surface-variant font-body leading-loose">
+        <p class="mb-6">GCF's approach to A.i is grounded in a set of working principles for responsible A.i, a formal governance framework under development, and alignment with international guidance including the UN General Assembly resolution on safe, secure, and trustworthy A.i and the UNFCCC Technology Executive Committee's work on A.i and climate action.</p>
+        <p>For a comprehensive overview of GCF's responsible A.i principles, governance framework, and safeguards, read the full article: <a href="#" class="text-primary underline">Link to Responsible A.i Article</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 1: Responsible Usage (full width) -->
+  <div class="bg-surface-container p-10 border-l-4 border-primary mb-6">
+    <h4 class="font-headline font-bold text-xl mb-6">Responsible Usage</h4>
+    <img src="FINAL_RU_1.png" alt="Responsible A.i Usage at GCF" class="w-full object-contain zoomable" onclick="openLightbox(this)"/>
+  </div>
+
+  <!-- Card 2: Regional Presence (full width) -->
+  <div class="bg-surface-container-high p-10 border-l-4 border-secondary mb-6">
+    <h4 class="font-headline font-bold text-xl mb-6">Regional Presence</h4>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <p class="font-body text-on-surface-variant text-sm leading-relaxed">The Green Climate Fund (GCF) is establishing a regional presence to strengthen its ability to deliver impact by being closer to developing country partners and stakeholders, while maintaining strong institutional governance and oversight.</p>
+      <p class="font-body text-on-surface-variant text-sm leading-relaxed">At its forty-first meeting, the GCF Board decided to establish regional offices to increase the efficiency and effectiveness of Secretariat operations, including programming and delivery support, in a manner that is cost-effective, operationally feasible, and aligned with GCF's governing framework.</p>
+    </div>
+  </div>
+
+  <!-- Card 3: Service Desk AI Agent (full width) -->
+  <div class="bg-secondary-container p-10 border-l-4 border-on-secondary-container">
+    <h4 class="font-headline font-bold text-xl mb-6">Service Desk A.i Assistant (Pilot)</h4>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div class="space-y-4">
+        <p class="font-body text-on-secondary-container text-sm leading-relaxed">To support regional presence through technology, GCF is piloting the ServiceDesk A.I Agent.</p>
+        <p class="font-body text-on-secondary-container text-sm leading-relaxed">The agent provides always-available, first-level IT support through a central communication natural language interface, helping staff get quick answers to common questions regardless of their location or time zone. By reducing reliance on location-specific support hours, it enables a more balanced and reliable support experience across headquarters and regional offices.</p>
+      </div>
+      <div class="space-y-4">
+        <p class="font-body text-on-secondary-container text-sm leading-relaxed">At the same time, all requests are captured and managed through a standardized service management approach, ensuring that incidents are consistently handled, tracked, and routed. This helps maintain a uniform level of service quality while improving visibility across regions.</p>
+        <p class="font-body text-on-secondary-container text-sm leading-relaxed">The model combines automation with human oversight. Routine queries can be resolved quickly through guided support, while more complex or high-impact issues are escalated to IT personnel, ensuring accountability and quality where it matters most.</p>
+        <p class="font-body text-on-secondary-container text-sm leading-relaxed">By enabling equitable access, standardized processes, and scalable support, the ServiceDesk A.I Agent contributes to GCF's goal of building a more integrated and operationally consistent regional footprint.</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <img src="FINAL_Journey_1.png" alt="Service Desk Journey Step 1" class="w-full object-contain zoomable" onclick="openLightbox(this)"/>
+      <img src="FINAL_Journey_2.png" alt="Service Desk Journey Step 2" class="w-full object-contain zoomable" onclick="openLightbox(this)"/>
+      <img src="FINAL_Journey_3.png" alt="Service Desk Journey Step 3" class="w-full object-contain zoomable" onclick="openLightbox(this)"/>
+      <img src="FINAL_Journey_4.png" alt="Service Desk Journey Step 4" class="w-full object-contain zoomable" onclick="openLightbox(this)"/>
+    </div>
+  </div>
+
+</div>
+</section>
+<!-- Booth 2: Efficient GCF -->
+<section class="px-8 md:px-12 py-24 bg-on-surface text-surface" id="booth2">
+<div class="max-w-[1440px] mx-auto">
+<div class="mb-16">
+<h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-secondary-container">Efficient GCF</h2>
+<div class="space-y-6 max-w-4xl">
+<p class="font-body text-xl text-surface-variant">
+<strong>A.i Across the Project Lifecycle:</strong> GCF manages a project lifecycle that spans ten distinct stages, from country engagement and accreditation through to evaluation and project closure. A.i initiatives focus on areas where they can deliver the most immediate and measurable value, while building a foundation for responsible extension across the full lifecycle over time.
+                        </p>
+<p class="font-body text-lg text-surface-variant/90 italic">
+<strong>Introducing CLIMA:</strong> CLIMA — Collaborative Leading Intelligent Multi-purpose Assistant — is the name given to GCF's A.i assistant platform. It is no coincidence that "clima" means weather in Spanish and other languages. CLIMA represents GCF's commitment to ensuring that the tools it builds are as connected to its climate mandate as the work they support.
+                        </p>
+<p class="font-body text-lg text-surface-variant/90">
+                        CLIMA brings together several A.i capabilities under a single, accessible identity, designed to guide GCF's partners through the Fund's processes: responding to questions, assisting with submission preparation, and supporting internal teams with complementary information during the review and appraisal process.
+                        </p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
+<div class="bg-surface-container-low/10 p-10 hover:bg-primary transition-colors group h-full">
+<div class="font-headline text-secondary-container text-sm mb-2">CLIMA SUITE 01</div>
+<div class="font-headline text-secondary-container/70 text-xs mb-4">Status: Entering implementation — April 2026</div>
+<h3 class="font-headline text-2xl font-bold mb-4">CLIMA A.i Assistant</h3>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed mb-3">Conversational guidance across the entire project lifecycle.</p>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed mb-3">The CLIMA A.i Assistant is a conversational interface that will be available through the GCF Partner Portal. Partners will be able to ask questions about accreditation, readiness, the Project Preparation Facility, concept notes, and funding proposal processes, and receive clear, accurate guidance in real time. This is especially valuable for entities engaging with GCF for the first time, or those with limited institutional support.</p>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed">The assistant draws on GCF's official guidance and policy documents to ensure accuracy. Its performance is continuously monitored and refined based on the quality and accuracy of its responses. Partners are always encouraged to contact GCF directly for matters requiring case-specific guidance.</p>
+</div>
+<div class="bg-surface-container-low/10 p-10 hover:bg-primary transition-colors group h-full">
+<div class="font-headline text-secondary-container text-sm mb-2">CLIMA SUITE 02</div>
+<div class="font-headline text-secondary-container/70 text-xs mb-4">Status: Under development — Target production Q3 2026</div>
+<h3 class="font-headline text-2xl font-bold mb-4">CLIMA Smart Submissions</h3>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed mb-3">Intelligent document parsing for the origination and reporting stages.</p>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed mb-3">CLIMA Smart Submissions allows partners to convert offline documents into structured digital submissions within the GCF Partner Portal. Rather than re-entering information that already exists in prepared documents, partners can upload their materials and the system extracts relevant data into the appropriate fields. This reduces duplication of effort and helps ensure data consistency across the submission and reporting cycle.</p>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed">The tool is designed to accommodate the variety of formats GCF's partners use. Language support is an area under active development, reflecting the multilingual reality of GCF's partnership base.</p>
+</div>
+<div class="bg-surface-container-low/10 p-10 hover:bg-primary transition-colors group h-full">
+<div class="font-headline text-secondary-container text-sm mb-2">CLIMA SUITE 03</div>
+<div class="font-headline text-secondary-container/70 text-xs mb-4">Status: Under development — Target production Q3 2026</div>
+<h3 class="font-headline text-2xl font-bold mb-4">CLIMA Researcher</h3>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed mb-3">A.i-supported research and analysis for project development and review.</p>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed">The CLIMA Researcher supports project teams by generating complementarity and coherence analyses, as well as country context summaries. This provides review teams with a structured starting point for their assessment, grounded in available data, and helps ensure that the information considered during project development and concept review is comprehensive and current.</p>
+</div>
+<div class="bg-surface-container-low/10 p-10 hover:bg-primary transition-colors group h-full">
+<div class="font-headline text-secondary-container text-sm mb-2">CLIMA SUITE 04</div>
+<div class="font-headline text-secondary-container/70 text-xs mb-4">Status: Under development — Target production Q3 2026</div>
+<h3 class="font-headline text-2xl font-bold mb-4">CLIMA A.i-Assisted Appraisal</h3>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed mb-3">Structured screening and review support at the appraisal stage.</p>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed mb-3">GCF has developed A.i-assisted screening and review capabilities to support the funding proposal appraisal process. These include tools for locally led climate action (LLCA) screening, which estimate the degree of local government ownership and community engagement within a given project, and structured review toolkits for the simplified approval process that help reviewers work through proposals more consistently and efficiently.</p>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed">A.i-assisted screening at this stage automates a checklist-based review and flags areas that warrant closer attention from human reviewers. This does not replace the review itself. It ensures that reviewers can direct their expertise where it matters most, while maintaining a consistent, criteria-based approach across all submissions.</p>
+</div>
+<div class="bg-surface-container-low/10 p-10 hover:bg-primary transition-colors group h-full">
+<div class="font-headline text-secondary-container text-sm mb-2">CLIMA SUITE 05</div>
+<div class="font-headline text-secondary-container/70 text-xs mb-4">Status: Under development — Target production Q3 2026</div>
+<h3 class="font-headline text-2xl font-bold mb-4">CLIMA Impact Synthesizer</h3>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed mb-3">Lessons learned synthesis and institutional knowledge retrieval.</p>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed mb-3">The CLIMA Impact Synthesizer supports the development of a centralized lessons learned capability that captures insights from completed and ongoing projects. A.i powers the synthesis and retrieval of institutional knowledge, enabling project teams to draw on past experience when appraising new proposals.</p>
+<p class="font-body text-surface-variant/80 group-hover:text-white text-sm leading-relaxed">As GCF's portfolio grows, the volume of accumulated experience becomes an increasingly valuable asset, but only if it is organized and accessible. The CLIMA Impact Synthesizer helps bridge that gap, turning lessons from individual projects into practical guidance for future ones. For example, when appraising a coastal resilience project, teams could surface lessons from similar projects in comparable contexts, ensuring that institutional knowledge informs new decisions.</p>
+</div>
+<div class="bg-secondary-container p-10 flex flex-col justify-start h-full">
+<div class="font-headline text-on-secondary-container/70 text-xs mb-4">Status: Concept stage</div>
+<h3 class="font-headline text-on-secondary-container text-2xl font-bold mb-4 italic">A.i-Assisted Legal Arrangements (Concept)</h3>
+<p class="font-body text-on-secondary-container/80 text-sm leading-relaxed mb-3">Exploratory initiative for structured drafting support.</p>
+<p class="font-body text-on-secondary-container/80 text-sm leading-relaxed mb-3">GCF is at an early stage of exploring whether A.i can assist with generating initial drafts of Funded Activity Agreements for approved funding proposals. This would involve producing a structured first draft based on the approved proposal, which legal and operational staff would then review and finalize.</p>
+<p class="font-body text-on-secondary-container/80 text-sm leading-relaxed">This initiative is currently a concept under evaluation. Any development would proceed within the governance and oversight frameworks that guide all A.i use at GCF. No A.i-generated legal document would proceed without thorough human review.</p>
+</div>
+</div>
+<div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-surface-variant/20 pt-12">
+<div>
+<h4 class="font-headline text-secondary-container text-xl font-bold mb-4">Looking Ahead</h4>
+<p class="font-body text-surface-variant leading-relaxed mb-4">GCF is focusing first on areas that deliver immediate operational value: reducing processing time, improving consistency, and giving partners better support throughout their engagement with the Fund.</p>
+<p class="font-body text-surface-variant leading-relaxed mb-4">As confidence and capacity grow, GCF will progressively extend A.i capabilities across the project lifecycle. Each extension will be guided by evidence from real-world use and feedback from partners and staff. The Fund iterates, refines, and scales responsibly — piloting, evaluating, and expanding based on demonstrated results.</p>
+<p class="font-body text-surface-variant leading-relaxed">As these tools mature, GCF is open to exploring how the approaches and lessons it develops could benefit its broader partnership, consistent with GCF's role in supporting developing country capacity.</p>
+</div>
+<div>
+<h4 class="font-headline text-secondary-container text-xl font-bold mb-4">Summary</h4>
+<ul class="space-y-4 font-body text-surface-variant leading-relaxed">
+<li class="flex gap-3"><span class="text-secondary-container font-bold flex-shrink-0">→</span><span><strong class="text-surface-container-low">A.i Accelerates the GCF Mission.</strong> A.i helps GCF deliver climate finance faster, more consistently, and with greater reach, serving the Fund's mandate and Strategic Plan.</span></li>
+<li class="flex gap-3"><span class="text-secondary-container font-bold flex-shrink-0">→</span><span><strong class="text-surface-container-low">Human-in-the-Loop Governance.</strong> Every A.i application operates under human oversight. Consequential decisions remain with qualified staff, supported by clear governance frameworks.</span></li>
+<li class="flex gap-3"><span class="text-secondary-container font-bold flex-shrink-0">→</span><span><strong class="text-surface-container-low">Secure and Responsible Roadmap.</strong> Implementation proceeds within GCF's security, data governance, and compliance frameworks. Governance precedes deployment.</span></li>
+<li class="flex gap-3"><span class="text-secondary-container font-bold flex-shrink-0">→</span><span><strong class="text-surface-container-low">A.i Enablement Across the Lifecycle.</strong> From screening to evaluation, A.i supports each stage of the project lifecycle, reducing administrative burden and strengthening analytical capacity.</span></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- Booth 3: Data-Driven Monitoring -->
+<section class="px-8 md:px-12 py-24 bg-surface-container-lowest" id="booth3">
+<div class="max-w-[1440px] mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+<div>
+<h2 class="font-headline text-4xl font-bold text-on-surface">Data-Driven Monitoring</h2>
+<p class="font-body text-on-surface-variant mt-2">Visualizing the real-time impact of GCF investments across the global landscape.</p>
+</div>
+<div class="font-headline text-primary font-bold tracking-tighter text-6xl opacity-10 hidden md:block">03 // ARCHIVE</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+<div class="md:col-span-4 bg-primary overflow-hidden h-[400px]">
+<img alt="Satellite view of reforestation progress in tropical region" class="w-full h-full object-cover opacity-80 hover:scale-105 transition-transform duration-700 zoomable" onclick="openLightbox(this)" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDayfxTxkpdeBwmB7Ph-oBKWRhCKGhvjq5ll6mnuP4uCQZw0xslIhHDFptCD9NSqFCVFpJ-bkliBIwZqtfl3j5CVSgzwbFTBQCiNswJYn8fMcn5-ZwjbbmfQY2ImxuBPerJo29Qo_H4uyXoLDaFiFdGu3XHhgah1ZWio7RyquFeeIokI9AuYEe79aFGw9oW-AOYJDyaaDad2iJStsXuPUwOeyWt4P8pS2I4JBoUBeA-Gz4GfTClbTe2_O8T2xqCuTyPDuclcvJYKGg"/>
+</div>
+<div class="md:col-span-8 flex flex-col gap-4">
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-secondary-container overflow-hidden h-[190px]">
+<img alt="Modern solar panel array with green mountain background" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 zoomable" onclick="openLightbox(this)" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArZLiM9PTegBCcGsj9Dh7qzzeSgLgws4MOclAeS1K8Jyx8ffZvLdFqMgLoUH_SEv6-L6wn7RyOFmJ7gzgYMY1HUw2b9idKtK07CHArBc0e9KjgzsrIKPTJyn7Udy5xEI6KFjeaS6Gac1GkOqbRA0VQGvf29kIqojE8XZtuSIWXbnfAdimhV-5ArrUy-8bkxrbpEnmef1F-9SrxIVs74Wq4m7IpKtzPbe5KWcVx7iX7iDE1-QkjTCIT-cy0GXA4zFOOqgwZU2VQo5A"/>
+</div>
+<div class="bg-primary-container overflow-hidden h-[190px]">
+<img alt="Climate scientist monitoring high-tech water irrigation system" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500 zoomable" onclick="openLightbox(this)" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV71okoIdZ6MhJmHxDZOhLoNNRFIkPk4e8PcD6c6LzTR7fmaGpw5gJpIM_cGj4wYOut9XogYP5ESZgYD3ZiWkTcF6iOCrIQ5t8yA7iARZuvmiHuAv6aKryv4EgVN-Xt-InfWlqO7oa316tRQFfOPJfith2cYEqlGQ6PbEin61TURga5GvRcWTMxv9ySWjh1cZ7aPMewOgDkdoYp-cscwr_rmtOvI-9cHRnTtNv5b78gmPZe_-wL3Im38ZoHK65zAmB8iHCvQlP9-g"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="overflow-hidden bg-on-surface relative group h-[190px]">
+<img alt="Abstract digital data visualization of global climate patterns" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity zoomable" onclick="openLightbox(this)" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGNhOFQj1HtyZS0S_5y8WsXuRAlyPpFT4AYrkDGX96jeWXByfeuWODQQWX7NcQBy8LK68FuAA6qNVIYwMwysNaVMZbP5eqCiIJ61eSHI7rIno_l-hnCZWzxuxSlz7t0lGP7SgEebZ9sjRHpSrZLDEvaiehguIVoyRJEKigX_ehOrIrLvjgT9u5l0qdrw185rQGDTBy3QGiHWqCGEWJ61-LAm4FEv7KKn4GJNvPgT85stVfZbAjUGxt7D1OSWF7PEoIFfX9kiTyiu8"/>
+<div class="absolute inset-0 p-6 flex items-end">
+<span class="font-headline text-white font-bold text-lg">Remote Sensing Integration</span>
+</div>
+</div>
+<div class="overflow-hidden bg-primary relative group h-[190px]">
+<img alt="Micro-grid infrastructure in rural community" class="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity zoomable" onclick="openLightbox(this)" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC2YQ8oD8L9X_5Y7W8_R2P9Q0E1G_B4K5L6M7N8O9P0Q1R2S3T4U5V6W7X8Y9Z0_123456789"/>
+<div class="absolute inset-0 p-6 flex items-end">
+<span class="font-headline text-white font-bold text-lg">Real-time Impact Hub</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Booth 4: Digital Innovations -->
+<section class="px-8 md:px-12 py-24 bg-surface" id="booth4">
+<div class="max-w-[1440px] mx-auto">
+<div class="p-12 bg-primary text-white">
+<h2 class="font-headline text-4xl font-bold mb-10">Digital Innovations</h2>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+<div>
+<h3 class="font-headline text-secondary-container text-xl font-bold mb-4 uppercase">Multilingualism</h3>
+<p class="font-body leading-relaxed text-surface-container mb-6">In line with its regional presence, multilingual and multicultural engagement bears a high significance. Modern technology, including A.I, is recognized as a valuable complement in such an environment, enhancing accessibility and efficiency while supporting established human interpretation practices.</p>
+<p class="font-body leading-relaxed text-surface-container mb-6">GCF is exploring live translation technology with measured optimism, recognizing that accuracy and contextual nuance are critical in a multilateral setting. The current approach includes internal trials combined with validation by expert translators and interpreters, a clear emphasis on augmentation rather than replacement, and ongoing engagement with leading technology vendors, including Microsoft.</p>
+<p class="font-body text-surface-container/80 text-sm mb-4">Examples of such technologies were featured at the GCF Board 44 Technology Exhibition in Songdo, including:</p>
+<ul class="space-y-4 font-body text-sm text-surface-container/90">
+<li class="flex gap-3"><span class="text-secondary-container font-bold flex-shrink-0">•</span><div><strong>Multilingual Presentations:</strong> Microsoft Teams enables participants to view presentation slides in their preferred language in real time without affecting others. It allows real-time slide translation into multiple languages.</div></li>
+<li class="flex gap-3"><span class="text-secondary-container font-bold flex-shrink-0">•</span><div><strong>Multilingual Live Captions:</strong> Teams can provide real-time transcription and translation of spoken language during meetings. It supports a wide range of spoken languages with translation into multiple target languages, including UN languages, and offers both A.i-generated and human captioning options. Caption data is not retained after meetings and is processed within the organization's geographical region.</div></li>
+<li class="flex gap-3"><span class="text-secondary-container font-bold flex-shrink-0">•</span><div><strong>Teams Live Interpreter:</strong> Microsoft Teams Live Interpreter enables real-time spoken-language interpretation within Teams meetings, allowing a human or A.i interpreter to provide simultaneous interpretation that attendees can select as an audio channel — closely mirroring the experience of traditional conference interpretations.</div></li>
+<li class="flex gap-3"><span class="text-secondary-container font-bold flex-shrink-0">•</span><div><strong>Microsoft Copilot Vision Mode:</strong> Allows users to share their screen and engage in a natural-language conversation with A.i about the content being viewed, including documents, presentations, and across various languages and content types.</div></li>
+</ul>
+</div>
+<div class="border-t lg:border-t-0 lg:border-l border-white/20 pt-8 lg:pt-0 lg:pl-12">
+<h3 class="font-headline text-secondary-container text-xl font-bold mb-4 uppercase">The Frontier Firm</h3>
+<p class="font-body leading-relaxed text-surface-container mb-6">Microsoft's 2025 Work Trend Index, based on global survey data complemented by platform usage and labor market insights, introduces the concept of the "Frontier Firm" — an organization that deploys A.I agents alongside human workers to address a growing capacity gap, where 80% of employees report insufficient time or energy and 53% of leaders say productivity must increase.</p>
+<ul class="space-y-3 font-body text-sm text-surface-container/90">
+<li class="flex gap-3"><span class="text-secondary-container font-bold">→</span> <a href="#" class="underline">2025: The year the Frontier Firm is born</a></li>
+<li class="flex gap-3"><span class="text-secondary-container font-bold">→</span> <a href="#" class="underline">2025 Microsoft Environmental Sustainability Report</a></li>
+<li class="flex gap-3"><span class="text-secondary-container font-bold">→</span> <a href="#" class="underline">2025 Microsoft Responsible AI Transparency Report</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-[#00210C] dark:bg-[#0B351A] border-t border-[#EAFFE9]/10">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 px-12 py-16 w-full max-w-[1440px] mx-auto">
+<div class="space-y-6">
+<div class="font-['Space_Grotesk'] font-bold text-lg text-[#CBFD3C]">GCF Archive</div>
+<p class="font-['Satoshi'] text-sm leading-relaxed text-[#EAFFE9]/80">
+                    The Green Climate Fund is a unique global platform to respond to climate change by investing in low-emission and climate-resilient development.
+                </p>
+</div>
+<div>
+<h4 class="font-headline text-white font-bold mb-6 text-sm uppercase tracking-widest">Navigation</h4>
+<ul class="space-y-4 font-['Satoshi'] text-sm">
+<li><a class="text-[#EAFFE9]/80 hover:text-[#CBFD3C] transition-all duration-200" href="#booth1">Exhibitions</a></li>
+<li><a class="text-[#EAFFE9]/80 hover:text-[#CBFD3C] transition-all duration-200" href="#">Documents</a></li>
+<li><a class="text-[#EAFFE9]/80 hover:text-[#CBFD3C] transition-all duration-200" href="#">Governance Framework</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline text-white font-bold mb-6 text-sm uppercase tracking-widest">Legal &amp; Standards</h4>
+<ul class="space-y-4 font-['Satoshi'] text-sm">
+<li><a class="text-[#EAFFE9]/80 hover:text-[#CBFD3C] transition-all duration-200" href="#">Privacy Policy</a></li>
+<li><a class="text-[#EAFFE9]/80 hover:text-[#CBFD3C] transition-all duration-200" href="#">Terms of Service</a></li>
+<li><a class="text-[#EAFFE9]/80 hover:text-[#CBFD3C] transition-all duration-200" href="#">Global Sustainability Standards</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-headline text-white font-bold mb-6 text-sm uppercase tracking-widest">Contact</h4>
+<ul class="space-y-4 font-['Satoshi'] text-sm">
+<li><a class="text-[#EAFFE9]/80 hover:text-[#CBFD3C] transition-all duration-200" href="#">Contact Support</a></li>
+<li><a class="text-[#EAFFE9]/80 hover:text-[#CBFD3C] transition-all duration-200" href="#">Media Inquiries</a></li>
+<li class="text-[#CBFD3C] font-bold mt-4">© 2024 Green Climate Fund.</li>
+</ul>
+</div>
+</div>
+</footer>
+<script>
+  function openLightbox(img) {
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightbox-img');
+    lbImg.src = img.src;
+    lbImg.alt = img.alt;
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox(e) {
+    if (!e || e.target === document.getElementById('lightbox') || e.target === document.getElementById('lightbox-close')) {
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+</body></html>
