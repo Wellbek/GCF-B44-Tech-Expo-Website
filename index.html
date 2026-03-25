@@ -212,6 +212,23 @@
     transform: translateX(3px);
   }
   .report-card:last-child { margin-bottom: 0; }
+
+  /* ── Power BI responsive wrapper ── */
+  .bi-embed-wrap {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    background: #f0f4f0;
+  }
+  .bi-embed-wrap iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
 </style>
 <script id="tailwind-config">
   tailwind.config = {
@@ -491,15 +508,28 @@
 
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
 
-      <!-- DMEL 1 — LINK -->
-      <a href="https://www.greenclimate.fund/sites/default/files/document/20251211-gcf10-impact-report-web-final.pdf" target="_blank" rel="noopener"
-         class="md:col-span-5 img-link-wrap img-zoom-wrap h-56 md:h-[400px]">
-        <img alt="DMEL visual 1" class="w-full h-full object-cover img-zoom" src="FINAL_DMEL_1.png" data-gallery="main"/>
-        <div class="img-link-badge"><span>↗</span> View Report</div>
-        <div class="img-link-label">
-          <span class="font-headline text-white font-bold text-base md:text-lg" style="text-decoration:underline;text-underline-offset:3px;">2025 GCF.10 Impact Report</span>
-        </div>
-      </a>
+      <!-- DMEL 1 + Digital Report link — left column -->
+      <div class="md:col-span-5 flex flex-col gap-4">
+        <a href="https://www.greenclimate.fund/story/gcf10-impact-report?key=qQsQIgUUxLfLJBvyy0argPiNwVNqiq6nUzQ5O43uRFY" target="_blank" rel="noopener"
+           class="img-link-wrap img-zoom-wrap flex-1 h-56 md:h-auto" style="min-height:0;">
+          <img alt="DMEL visual 1" class="w-full h-full object-cover img-zoom" src="FINAL_DMEL_1.png" data-gallery="main"/>
+          <div class="img-link-badge"><span>↗</span> View Report</div>
+          <div class="img-link-label">
+            <span class="font-headline text-white font-bold text-base md:text-lg" style="text-decoration:underline;text-underline-offset:3px;">2025 GCF.10 Impact Report</span>
+          </div>
+        </a>
+        <!-- GCF.10 Digital Impact Report card -->
+        <a href="https://www.greenclimate.fund/sites/default/files/document/20251211-gcf10-impact-report-web-final.pdf"
+          target="_blank" rel="noopener"
+          class="flex-shrink-0 flex items-center justify-between gap-4 bg-primary px-6 py-3 hover:opacity-90 transition-opacity group"
+          style="border: 1.5px solid rgba(203,253,60,0.55); min-height: 0;">
+          <div class="flex-1">
+            <p class="font-headline text-secondary-container text-xs font-bold uppercase tracking-widest mb-1">GCF.10 Impact Report</p>
+            <p class="font-body text-surface-container text-sm">View the full pdf report here</p>
+          </div>
+          <span class="text-secondary-container text-sm flex-shrink-0">→</span>
+        </a>
+      </div>
 
       <!-- Right grid -->
       <div class="md:col-span-7 flex flex-col gap-4">
@@ -530,6 +560,35 @@
         </div>
       </div>
     </div>
+
+
+
+    <!-- ── Power BI Dashboard ────────────────────────────────────────────── -->
+    <div class="mt-8">
+      <div class="bg-surface-container p-6 md:p-8 border-l-4 border-primary">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h4 class="font-headline font-bold text-xl text-on-surface">Open Data Library</h4>
+            <p class="font-body text-on-surface-variant text-sm mt-1">The Open Data Library consolidates GCF's portfolio data in one accessible platform, and is a useful tool which enables you to efficiently and effectively access real-time portfolio insights and performance metrics.</p>
+          </div>
+          <a href="https://app.fabric.microsoft.com/view?r=eyJrIjoiNWI0NzU0NDMtNjE3Ni00MzA2LTk0NTEtZjU4OTkyMDI2NjJjIiwidCI6IjJkMTExMzY0LTAzMWMtNDg1Yy1iMjYwLWMzOGNiYjNmNWNkZiIsImMiOjEwfQ%3D%3D&pageName=4a4974e87e17d7895b21"
+             target="_blank" rel="noopener"
+             class="flex-shrink-0 flex items-center gap-2 border border-primary text-primary font-headline font-bold text-xs uppercase tracking-wider px-4 py-2 hover:bg-primary hover:text-white transition-colors">
+            <span>Open Full Dashboard</span>
+            <span>↗</span>
+          </a>
+        </div>
+        <div class="bi-embed-wrap border border-outline-variant">
+          <iframe
+            title="ODL (Public)"
+            src="https://app.fabric.microsoft.com/view?r=eyJrIjoiNWI0NzU0NDMtNjE3Ni00MzA2LTk0NTEtZjU4OTkyMDI2NjJjIiwidCI6IjJkMTExMzY0LTAzMWMtNDg1Yy1iMjYwLWMzOGNiYjNmNWNkZiIsImMiOjEwfQ%3D%3D&pageName=4a4974e87e17d7895b21"
+            frameborder="0"
+            allowfullscreen="true">
+          </iframe>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -636,7 +695,7 @@
           <div class="w-8 h-0.5 bg-[#4CAF50] mb-4"></div>
           <ul class="space-y-3 text-sm text-white/80">
           <li><a href="https://www.greenclimate.fund/about/contact" class="hover:text-white transition-colors">Contact</a></li>
-          <li><a href="mailto:press@gcfund.org" class="hover:text-white transition-colors">Press enquiries &amp; interviews</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#e9999b8c9a9aa98e8a8f9c878dc7869b8e" class="hover:text-white transition-colors">Press enquiries &amp; interviews</a></li>
           <li><a href="https://www.greenclimate.fund/about/disclosure" class="hover:text-white transition-colors">Information disclosure</a></li>
           <li><a href="https://irm.greenclimate.fund/case-register/file-complaint?_gl=1*lm80g3*_ga*MTg2NTczOTM2Ni4xNzYwMDgyNzIx*_ga_R4E8SRK8JR*czE3NzQxNTU0MTkkbzEzJGcxJHQxNzc0MTU4MTYyJGo2MCRsMCRoMA..*_ga_1G93H3NSBL*czE3NzQxNTU0MTkkbzEzJGcxJHQxNzc0MTU4MTYyJGo2MCRsMCRoMA.." class="hover:text-white transition-colors">Filing a complaint</a></li>
           <li><a href="https://iiu.greenclimate.fund/reporting-fraud/how-to-report?_gl=1*lm80g3*_ga*MTg2NTczOTM2Ni4xNzYwMDgyNzIx*_ga_R4E8SRK8JR*czE3NzQxNTU0MTkkbzEzJGcxJHQxNzc0MTU4MTYyJGo2MCRsMCRoMA..*_ga_1G93H3NSBL*czE3NzQxNTU0MTkkbzEzJGcxJHQxNzc0MTU4MTYyJGo2MCRsMCRoMA.." class="hover:text-white transition-colors">Reporting fraud</a></li>
@@ -656,7 +715,7 @@
 
       <!-- Social -->
       <div class="flex items-center gap-4 text-white text-lg mb-1">
-        <a href="mailto:info@gcfund.org" aria-label="Email" class="hover:text-[#4CAF50] transition-colors"><i class="fa-regular fa-envelope"></i></a>
+        <a href="/cdn-cgi/l/email-protection#b3daddd5dcf3d4d0d5c6ddd79ddcc1d4" aria-label="Email" class="hover:text-[#4CAF50] transition-colors"><i class="fa-regular fa-envelope"></i></a>
         <a href="https://facebook.com/GCFOfficial" aria-label="Facebook" class="hover:text-[#4CAF50] transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
         <a href="https://twitter.com/theGCF" aria-label="Twitter" class="hover:text-[#4CAF50] transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
         <a href="https://www.instagram.com/greenclimatefund/" aria-label="Instagram" class="hover:text-[#4CAF50] transition-colors"><i class="fa-brands fa-instagram"></i></a>
@@ -703,7 +762,7 @@
         <div class="w-8 h-0.5 bg-[#4CAF50] mb-4"></div>
         <ul class="space-y-3 text-sm text-white/80">
           <li><a href="https://www.greenclimate.fund/about/contact" class="hover:text-white transition-colors">Contact</a></li>
-          <li><a href="mailto:press@gcfund.org" class="hover:text-white transition-colors">Press enquiries &amp; interviews</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#e49496819797a4838782918a80ca8b9683" class="hover:text-white transition-colors">Press enquiries &amp; interviews</a></li>
           <li><a href="https://www.greenclimate.fund/about/disclosure" class="hover:text-white transition-colors">Information disclosure</a></li>
           <li><a href="https://irm.greenclimate.fund/case-register/file-complaint?_gl=1*lm80g3*_ga*MTg2NTczOTM2Ni4xNzYwMDgyNzIx*_ga_R4E8SRK8JR*czE3NzQxNTU0MTkkbzEzJGcxJHQxNzc0MTU4MTYyJGo2MCRsMCRoMA..*_ga_1G93H3NSBL*czE3NzQxNTU0MTkkbzEzJGcxJHQxNzc0MTU4MTYyJGo2MCRsMCRoMA.." class="hover:text-white transition-colors">Filing a complaint</a></li>
           <li><a href="https://iiu.greenclimate.fund/reporting-fraud/how-to-report?_gl=1*lm80g3*_ga*MTg2NTczOTM2Ni4xNzYwMDgyNzIx*_ga_R4E8SRK8JR*czE3NzQxNTU0MTkkbzEzJGcxJHQxNzc0MTU4MTYyJGo2MCRsMCRoMA..*_ga_1G93H3NSBL*czE3NzQxNTU0MTkkbzEzJGcxJHQxNzc0MTU4MTYyJGo2MCRsMCRoMA.." class="hover:text-white transition-colors">Reporting fraud</a></li>
@@ -722,7 +781,7 @@
           <p>+82 32 458 6059 (KST)</p>
         </div>
         <div class="flex items-center justify-end gap-3 text-white text-base mb-1">
-          <a href="mailto:info@gcfund.org" aria-label="Email" class="hover:text-[#4CAF50] transition-colors"><i class="fa-regular fa-envelope"></i></a>
+          <a href="/cdn-cgi/l/email-protection#e980878f86a98e8a8f9c878dc7869b8e" aria-label="Email" class="hover:text-[#4CAF50] transition-colors"><i class="fa-regular fa-envelope"></i></a>
           <a href="https://facebook.com/GCFOfficial" aria-label="Facebook" class="hover:text-[#4CAF50] transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
           <a href="https://twitter.com/theGCF" aria-label="Twitter" class="hover:text-[#4CAF50] transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
           <a href="https://www.instagram.com/greenclimatefund/" aria-label="Instagram" class="hover:text-[#4CAF50] transition-colors"><i class="fa-brands fa-instagram"></i></a>
@@ -736,7 +795,7 @@
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // ── Lightbox gallery ───────────────────────────────────────────────────────
   let galleryImgs = [];
   let currentIdx = 0;
